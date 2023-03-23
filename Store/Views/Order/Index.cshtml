@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Orders";
+    Layout = "_Layout";
+}
+
+@model List<Order>
+
+<h1>@ViewBag.Title</h1>
+
+@using (Html.BeginForm())
+{ 
+   <div class="form-group row">
+        <label for="start-date" class="col-sm-2 col-form-label">Start Date:</label>
+        <div class="col-sm-4">
+            @Html.TextBox("OrderDateFrom", DateTime.Now.AddMonths(-1).ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
+        </div>
+        <label for="end-date" class="col-sm-2 col-form-label">End Date:</label>
+        <div class="col-sm-4">
+            @Html.TextBox("OrderDateTo", DateTime.Now.ToString("yyyy-MM-dd"), new { @class = "form-control", type = "date" })
+        </div>
+         <label for="number" class="col-sm-2 col-form-label">Number:</label>
+        <div class="col-sm-4">
+            @Html.TextBox("Number", null, new { @class = "form-control", type = "text" })
+        </div>
+        <label for="providerId" class="col-sm-2 col-form-label">Provider:</label>
+        <div class="col-sm-4">
+           @Html.DropDownList("ProviderId", ViewBag.Providers as SelectList, new { @class = "form-control", id = "provider" }) 
+       </div>
+        <label for="itemName" class="col-sm-2 col-form-label">Name of item:</label>
+       <div class="col-sm-4">
+           @Html.TextBox("itemName", null, new { @class = "form-control", type = "text" })
+       </div>
+       <label for="Unit" class="col-sm-2 col-form-label">Unit:</label>
+       <div class="col-sm-4">
+             @Html.TextBox("Unit", null, new { @class = "form-control", type = "text" })
+       </div>
+    </div>
+    
+    <button type="submit" name="apply-filter" class="btn btn-primary">Apply Filter</button>
+}
+
+<br><br>
+
+<table class="table table-hover">
+    <thead>
+    <tr>
+        <th>Order Number</th>
+        <th>Order Date</th>
+        <th>Provider</th>
+        <th>Total items count</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var order in Model)
+    {
+        <tr  onclick="location.href='@Url.Action("GetOrderById", "Order", new {id = order.Id})'">
+            <td>@order.Number</td>
+            <td>@order.Date.ToShortDateString()</td>
+            <td>@order.Provider.Name</td>
+            <td>@order.ItemsCount</td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,75 @@
+﻿@model Order
+
+@{
+    ViewBag.Title = "Edit order";
+    Layout = "_Layout";
+}
+
+<h1>Edit Order</h1>
+@using (Html.BeginForm("UpdateOrder", "Order",new {id = @Model.Id}, FormMethod.Post))
+{
+	    @Html.HiddenFor(m => m.Id)
+		<label for="Number">Number:</label>
+		<input type="text" id="Number" name="Number" value="@Model.Number"><br><br>
+
+		<label for="orderDate">Date:</label>
+		<input type="date" id="Date" name="Date" value="@Model.Date.ToString("yyyy-MM-dd")"><br><br>
+
+		<label for="ProviderId">Provider:</label>
+		<div class="col-sm-4">
+			@Html.DropDownList("ProviderId", ViewBag.Providers as SelectList, new { @class = "form-control", id = "ProviderId" }) 
+		</div><br>
+	 
+	
+	<div class="col-sm-4">
+		<button type="submit" class="btn btn-primary">Save Order</button>
+		<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Order")'">Back</button>
+	</div><br>
+}
+	
+@using (Html.BeginForm("DeleteOrder", "Order", new { id = Model.Id}, FormMethod.Post))
+{
+	@Html.HiddenFor(m => m.Id)
+	<div class="col-sm-4">
+	<button type="submit" name="X-HTTP-Method-Override" value="DELETE" class="btn btn-primary" formnovalidate
+	        onclick="return confirm('Are you sure?')">
+		Delete
+	</button>
+	</div>
+}
+
+
+<table class="table table-hover">
+	<thead>
+	<tr>
+		<th>Item name</th>
+		<th>Quantity</th>
+		<th>Unit</th>
+		<th> </th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var i in Model.OrderItems.ToList())
+	{
+		<tr>
+			<td>@i.Name</td>
+			<td>@i.Quantity</td>
+			<td>@i.Unit</td>
+			<td>
+				@using (Html.BeginForm("DeleteOrderItem", "OrderItem", new {id = i.Id}, FormMethod.Post))
+				{
+					<button type="submit" name="X-HTTP-Method-Override" value="DELETE" class="badge bg-primary rounded-pill task-button cancel" formnovalidate
+					        onclick="return confirm('Are you sure?')">
+						Delete
+					</button>
+				}     
+				<button onclick="location.href='@Url.Action("GetOrderItem", "OrderItem", new {id = i.Id})'" class="badge bg-primary rounded-pill task-button cancel">Edit</button>
+  	
+			</td>
+		</tr>
+	}
+                 
+	</tbody>
+</table>
+
+<button onclick="location.href='@Url.Action("AddOrderItem", "OrderItem", new {orderId = Model.Id})'" class="btn btn-primary">Add item</button>

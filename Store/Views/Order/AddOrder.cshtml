@@ -1,0 +1,28 @@
+﻿@model Order
+
+@{
+    ViewBag.Title = "New order";
+    Layout = "_Layout";
+}
+
+	<h1>Add Order</h1>
+@using (Html.BeginForm("CreateOrder", "Order",  FormMethod.Post))
+{
+		<label for="Number">Number:</label>
+		<input type="text" id="Number" name="Number"><br><br>
+
+		<label for="orderDate">Date:</label>
+		<input type="date" id="Date" name="Date" value="@DateTime.Now.ToString("yyyy-MM-dd")"><br><br>
+
+		<label for="ProviderId">Provider:</label>
+        	<div class="col-sm-4">
+       			@Html.DropDownList("ProviderId", ViewBag.Providers as SelectList, new { @class = "form-control", id = "ProviderId" }) 
+	        </div><br>
+  
+		<div class="col-sm-4">
+			<button type="submit" class="btn btn-primary">Save Order</button>
+			<button type="button" class="btn btn-primary" onclick="location.href='@Url.Action("Index", "Order")'">Back</button>
+		</div><br>
+}
+
+	
